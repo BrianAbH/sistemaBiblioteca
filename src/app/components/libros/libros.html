@@ -57,7 +57,7 @@
                                 <td>
                                     <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
                                         <button type="button" class="btn btn-outline-primary" (click)="editar(lb)"><i class="bi bi-pencil"></i></button>
-                                        <button type="button" class="btn btn-outline-danger" (click)="eliminarLibro(lb.id_libro)"><i class="bi bi-trash"></i></button>
+                                        <button type="button" class="btn btn-outline-danger" (click)="eliminarLibro(lb.id_libro, lb.titulo)"><i class="bi bi-trash"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -115,6 +115,9 @@
                         @if(formLibro.get('titulo')?.errors?.['required']){
                             *El campo titulo es obligatorio
                         }
+                        @if(formLibro.get('titulo')?.errors?.['minlength']){
+                            *El campo titulo debe contener al menos 3 caracteres
+                        }
                     }
                 </span>
             </div>
@@ -125,13 +128,16 @@
                 <span class="errors">
                     @if(formLibro.get('isbn')?.invalid && (formLibro.get('isbn')?.dirty || formLibro.get('isbn')?.touched)){
                         @if(formLibro.get('isbn')?.errors?.['required']){
-                            *El campo isbn es obligatorio
+                            *El campo ISBN es obligatorio
                         }
                         @if (formLibro.get('isbn')?.errors?.['pattern']) {
                                 Solo se permiten numeros
                         }
                         @if(this.formLibro.get('isbn')?.errors?.['maxlength']){
-                            *El campo isbn solo puede contener 13 caracteres
+                            *El campo ISBN solo puede contener 13 numeros
+                        }
+                        @if(this.formLibro.get('isbn')?.errors?.['minlength']){
+                            *El campo ISBN debe contener al menos 13 numeros
                         }
                     }
                 </span>
@@ -141,9 +147,13 @@
                 <label class="form-label">Autor<span class="errors">*</span></label>
                 <input type="text" class="form-control" placeholder="Ángel David Revilla Lenocci" formControlName="autor">
                 <span class="errors">
-                    @if(formLibro.get('autor')?.invalid && (formLibro.get('titulo')?.dirty || formLibro.get('autor')?.touched)){
+                    @if(formLibro.get('autor')?.invalid && (formLibro.get('autor')?.dirty || formLibro.get('autor')?.touched)){
                         @if(formLibro.get('autor')?.errors?.['required']){
                             *El campo Autor es obligatorio
+                        }
+
+                        @if(formLibro.get('autor')?.errors?.['minlength']){
+                            *El campo Autor debe contener al menos 3 caracteres
                         }
                     }
                 </span>
@@ -194,6 +204,12 @@
                     @if(formLibro.get('ejemplares')?.invalid && (formLibro.get('ejemplares')?.dirty || formLibro.get('ejemplares')?.touched)){
                         @if(formLibro.get('ejemplares')?.errors?.['required']){
                             *El campo ejemplares es obligatorio
+                        }
+                        @if(formLibro.get('ejemplares')?.errors?.['min']){
+                            *El campo ejemplares debe ser un número mayor o igual a 1
+                        }
+                        @if(formLibro.get('ejemplares')?.errors?.['pattern']){
+                            *El campo ejemplares solo puede contener números
                         }
                     }
                 </span>
@@ -328,3 +344,17 @@
 </div>
 
 
+<!--Toast-->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <i class="bi bi-check2-square rounded me-2"></i>
+      <strong class="me-auto">Libro</strong>
+      <small>1 sec ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{msjToast}}
+    </div>
+  </div>
+</div>

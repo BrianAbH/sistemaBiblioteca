@@ -39,6 +39,8 @@ export class Libros {
   modalRefC: any;
   modalRefcs: any;
 
+  msjToast:string = '';
+
   filtro: string = '';
   filtrar(texto: string) {
     this.filtro = texto;
@@ -51,12 +53,12 @@ export class Libros {
 
     // Formulario de libros
     this.formLibro = this.fb.group({
-      titulo: ['', Validators.required],
-      isbn: ['',[Validators.required,Validators.pattern(/^\d+$/),Validators.maxLength(13)]],
-      autor: ['', Validators.required],
+      titulo: ['', Validators.required, Validators.minLength(3)],
+      isbn: ['',[Validators.required,Validators.pattern(/^\d+$/),Validators.maxLength(13), Validators.minLength(13)]],
+      autor: ['', Validators.required, Validators.minLength(3)],
       id_categoria: ['', Validators.required],
       anioPublicacion: ['', Validators.required],
-      ejemplares: ['', Validators.required],
+      ejemplares: ['', Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)],
       estado: [true]
     });
 
@@ -146,26 +148,12 @@ export class Libros {
     return categoria?.nombre_categoria || 'Sin Categoría';
   }
 
-  eliminarLibro(id:number){
-    let isDelete = confirm('Esta seguro que quiere eliminar este libro');
-    if(isDelete){
-      this.srv_libro.deleteLibro(id).subscribe(
-        ()=>{
-          alert('Libro Eliminado');
-          this.cargarLibros();
-        }
-      );
-      alert('No se puede eliminar el registro porque está siendo utilizado actualmente.');
-    }
-  }
-
   /*Guarda o actualiza un libro*/
   guardarLibro(): void {
     if (this.formLibro.invalid) {
       this.formLibro.markAllAsTouched();
       return;
     }
-
     const datos = this.formLibro.value;
 
     // Actualización
@@ -173,23 +161,33 @@ export class Libros {
       const libro: ILibros = {...datos,id_libro: this.isEditing};
 
       this.srv_libro.updateLibro(libro).subscribe(() => {
-        alert('Datos del libro actualizados');
         this.cargarLibros();
         this.modalRefL.hide();
+        this.mostrarToast(libro.titulo, "Actualizado Correctamente");
       });
       return;
     }
-
     // Registro
     const libro: ILibros = { ...datos };
-
     this.srv_libro.postLibro(libro).subscribe(() => {
-      alert('Libro guardado');
       this.cargarLibros();
       this.modalRefL.hide();
+      this.mostrarToast(libro.titulo, "Guardado Correctamente");
     });
   }
 
+  eliminarLibro(id:number, titulo:string) {
+    let isDelete = confirm('Esta seguro que quiere eliminar este libro');
+    if(isDelete){
+      this.srv_libro.deleteLibro(id).subscribe(
+        ()=>{
+          this.cargarLibros();
+          this.mostrarToast(titulo, "Eliminado Correctamente");
+        }
+      );
+      this.mostrarToast(titulo, "No se puede eliminar el registro porque está siendo utilizado actualmente.");
+    }
+  }
   /*Guarda o actualiza una categoría*/
   guardarCategoria(): void {
     if (this.formCategoria.invalid) {
@@ -234,6 +232,13 @@ export class Libros {
     if (n < 1 || n > this.totalPages) return;
     this.page = n;
   }
+
+  mostrarToast(nombre: string, mensaje:string){
+    const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+    this.msjToast = `${nombre} ${mensaje}`;
+    toast.show();
+  }
+
 
   //Metodos para lograr la paginacion Categorias
   get totalPagesC(): number {
