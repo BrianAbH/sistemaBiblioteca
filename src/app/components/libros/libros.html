@@ -113,10 +113,10 @@
                 <span class="errors">
                     @if(formLibro.get('titulo')?.invalid && (formLibro.get('titulo')?.dirty || formLibro.get('titulo')?.touched)){
                         @if(formLibro.get('titulo')?.errors?.['required']){
-                            *El campo titulo es obligatorio
+                            *El campo título es obligatorio
                         }
                         @if(formLibro.get('titulo')?.errors?.['minlength']){
-                            *El campo titulo debe contener al menos 3 caracteres
+                            *El campo título debe contener al menos 3 caracteres
                         }
                     }
                 </span>
@@ -171,7 +171,7 @@
                         <span class="errors">
                             @if(formLibro.get('id_categoria')?.invalid && (formLibro.get('id_categoria')?.dirty || formLibro.get('id_categoria')?.touched)){
                                 @if(formLibro.get('id_categoria')?.errors?.['required']){
-                                    *Seleccione una categoria, Porfavor
+                                    *Seleccione una categoría, Por favor
                                 }
                             }
                         </span>
@@ -186,12 +186,12 @@
             </div>
 
             <div class="mb-3">
-                <label class="form-label">Año Publicación<span class="errors">*</span></label>
+                <label class="form-label">Año de Publicación<span class="errors">*</span></label>
                 <input type="date" class="form-control" formControlName="anioPublicacion">
                 <span class="errors">
                     @if(formLibro.get('anioPublicacion')?.invalid && (formLibro.get('anioPublicacion')?.dirty || formLibro.get('anioPublicacion')?.touched)){
                         @if(formLibro.get('anioPublicacion')?.errors?.['required']){
-                            *Seleccione el año de publicacion
+                            *Seleccione el año de publicación
                         }
                     }
                 </span>

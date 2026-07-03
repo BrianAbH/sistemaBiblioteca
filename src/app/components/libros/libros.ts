@@ -53,12 +53,12 @@ export class Libros {
 
     // Formulario de libros
     this.formLibro = this.fb.group({
-      titulo: ['', Validators.required, Validators.minLength(3)],
+      titulo: ['', [Validators.required, Validators.minLength(3)]],
       isbn: ['',[Validators.required,Validators.pattern(/^\d+$/),Validators.maxLength(13), Validators.minLength(13)]],
-      autor: ['', Validators.required, Validators.minLength(3)],
-      id_categoria: ['', Validators.required],
-      anioPublicacion: ['', Validators.required],
-      ejemplares: ['', Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)],
+      autor: ['', [Validators.required, Validators.minLength(3)]],
+      id_categoria: ['', [Validators.required]],
+      anioPublicacion: ['', [Validators.required]],
+      ejemplares: ['', [Validators.required, Validators.min(1), Validators.pattern(/^\d+$/)]],
       estado: [true]
     });
 
