@@ -1,20 +1,21 @@
 import { Routes } from '@angular/router';
 import { Login } from './components/login/login';
 import { Menu } from './components/menu/menu';
-import { Resumen } from './components/resumen/resumen';
+import { Dashboard } from './components/dashboard/dashboard';
 import { Usuarios } from './components/usuarios/usuarios';
 import { Libros } from './components/libros/libros';
 import { Prestamos } from './components/prestamos/prestamos';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
 
-    {path: "menu-vista", component: Menu,
+    {path: "menu-vista", canActivate: [AuthGuard], component: Menu,
         children: [
-            {path:"resumen-vista", component: Resumen},
+            {path:"dashboard-vista", component: Dashboard},
             {path:"usuarios-vista", component: Usuarios},
             {path:"libros-vista", component: Libros},
             {path:"prestamos-vista", component: Prestamos},
-            {path:"", redirectTo:"resumen-vista", pathMatch:"full"}
+            {path:"", redirectTo:"dashboard-vista", pathMatch:"full"}
     ]},
     // RUTAS SIN MENÚ
     {path:"login", component: Login},

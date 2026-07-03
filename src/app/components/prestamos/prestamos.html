@@ -6,7 +6,7 @@
                 <p class="fs-1 fw-semibold">Préstamos</p>
                 <p class="font-monospace">Registra préstamos, controla devoluciones y consulta el historial.</p>
 
-                <div class="w-50 col-sm-12">
+                <div class="col-lg-5 col-sm-12">
                     <app-search>
 
                     </app-search>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="col-lg-2 col-12 d-flex flex-column align-items-center justify-content-center">
-                <button class="btn btn-success w-100"><i class="bi bi-plus"></i> Nuevo Préstamo </button>
+                <button class="btn btn-success w-100" (click)="abrirModal()"><i class="bi bi-plus"></i> Nuevo Préstamo </button>
             </div>
         </div>
 
@@ -23,25 +23,144 @@
                 <thead class="table-light">
                     <tr>
                         <th scope="col">ID</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Correo</th>
-                        <th scope="col">Teléfono</th>
-                        <th scope="col">Acciones</th>
+                        <th scope="col">Usuario</th>
+                        <th scope="col">Libro</th>
+                        <th scope="col">Fecha del Prestamo</th>
+                        <th scope="col">Fecha Maxima de Devolucion</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Opciones</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>1</td>
-                        <td>Juan Pérez</td>
-                        <td>ba</td>
-                        <td>1234567890</td>
-                        <td>
-                            <button class="btn btn-primary btn-sm"><i class="bi bi-pencil"></i></button>
-                            <button class="btn btn-danger btn-sm ms-3"><i class="bi bi-trash"></i></button>
-                        </td>
-                    </tr>
+                    @for (p of prestamos; track $index) {
+                        <tr>
+                            <td>{{p.id_prestamo}}</td>
+                            <td>{{nombreUsuario(p.id_usuario)}}</td>
+                            <td>{{nombreLibro(p.id_libro)}}</td>
+                            <td>{{p.fechaPrestamo}}</td>
+                            <td>{{p.fechaDevolucion}}</td>
+                            <td>{{p.estado}}</td>
+                            <td class="me-1">
+                                <div class="btn-group btn-group-sm" role="group" aria-label="Small button group">
+                                    <button type="button" class="btn btn-outline-primary" (click)="editar(p)"><i class="bi bi-pencil"></i></button>
+                                    @if(p.estado === 'Devuelto'){
+                                        <button type="button" class="btn btn-outline-danger" disabled (click)="eliminar(p.id_prestamo)"><i class="bi bi-trash"></i></button>
+                                    }@else {
+                                        <button type="button" class="btn btn-outline-danger" (click)="eliminar(p.id_prestamo)"><i class="bi bi-trash"></i></button>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                    
                 </tbody>
             </table>
         </div>
     </div>
 </div> 
+
+
+<!--Modal-->
+<div class="modal fade" aria-hidden="true" tabindex="-1" #modalPrestamoRef>
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" >
+            {{isEditing ? "Actualizar datos del usuario" : "Nuevo Usuario"}}
+        </h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="formPrestamo">
+            <div class="mb-3">
+                <label for="usuario" class="form-label">Usuarios<span class="errors">*</span></label>
+                <app-search
+                        (searchChange)="filtrar($event)"
+                        place="Buscar usuario">
+                ></app-search>
+                <select id="usuario" class="form-select" formControlName="id_usuario">
+                    <option value="">--Seleccione un usuario--</option>
+                    @for (u of usuarios | filtrarUsuarios:filtro:usuarios; track $index) {
+                        <option class="form-control" [value]="u.id_usuario">{{u.nombre}}</option>
+                    }
+                </select>
+                <span class="errors">
+                    @if (this.formPrestamo.get('id_usuario')?.invalid && this.formPrestamo.get('id_usuario')?.dirty || this.formPrestamo.get('id_usuario')?.touched) {
+                        @if(this.formPrestamo.get('id_usuario')?.errors?.['required']){
+                            Seleccione un usuario para el prestamo porfavor
+                        }
+                    }
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label for="libro" class="form-label">Libros<span class="errors">*</span></label>
+                <app-search
+                        (searchChange)="filtrarL($event)"
+                        place="Buscar Libro">
+                ></app-search>
+
+                <select id="libro" class="form-select" formControlName="id_libro">
+                    <option value="">--Seleccione un libro--</option>
+                    @for (l of libros | filtrar:libros:filtroL; track $index) {
+                        <option [value]="l.id_libro">{{l.titulo}} {{l.ejemplares}} ejemplares disponibles</option>
+                    }
+                </select>
+                <span class="errors">
+                    @if (this.formPrestamo.get('id_libro')?.invalid && this.formPrestamo.get('id_libro')?.dirty || this.formPrestamo.get('id_libro')?.touched) {
+                        @if(this.formPrestamo.get('id_libro')?.errors?.['required']){
+                            Seleccione un libro para el prestamo porfavor
+                        }
+                    }
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label for="fechaP" class="form-label">Fecha del Prestamo<span class="errors">*</span></label>
+                <input id="fechaP" type="date" class="form-control" formControlName="fechaPrestamo">
+                <span class="errors">
+                    @if (this.formPrestamo.get('fechaPrestamo')?.invalid && this.formPrestamo.get('fechaPrestamo')?.dirty || this.formPrestamo.get('fechaPrestamo')?.touched) {
+                        @if(this.formPrestamo.get('fechaPrestamo')?.errors?.['required']){
+                            Ingrese la fecha del prestamo
+                        }
+                    }
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label for="fechaD" class="form-label">Fecha de Devolución<span class="errors">*</span></label>
+                <input id="fechaD" type="date" class="form-control" formControlName="fechaDevolucion">
+                <span class="errors">
+                    @if (this.formPrestamo.get('fechaDevolucion')?.invalid && this.formPrestamo.get('fechaDevolucion')?.dirty || this.formPrestamo.get('fechaDevolucion')?.touched) {
+                        @if(this.formPrestamo.get('fechaDevolucion')?.errors?.['required']){
+                            Ingrese la fecha de Devolución
+                        }
+                    }
+                </span>
+            </div>
+
+            <div class="mb-3">
+                <label for="est" class="form-label">Estado del Prestamo<span class="errors">*</span></label>
+                <select id="est" class="form-select" formControlName="estado">
+                    <option value="">--Seleccione el estado--</option>
+                    @for (e of estados; track $index) {
+                        <option [value]="e">{{e}}</option>
+                    }
+                </select>
+                <span class="errors">
+                    @if (this.formPrestamo.get('estado')?.invalid && this.formPrestamo.get('estado')?.dirty || this.formPrestamo.get('estado')?.touched) {
+                        @if(this.formPrestamo.get('estado')?.errors?.['required']){
+                            Ingrese el estado del Prestamo
+                        }
+                    }
+                </span>
+            </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-primary" (click)="guardar()"> Guardar</button>
+      </div>
+    </div>
+  </div>
+</div>

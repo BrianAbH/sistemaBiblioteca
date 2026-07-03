@@ -1,0 +1,40 @@
+import { Component } from '@angular/core';
+import { AuthService } from '../../services/auth/auth.service';
+import { UsuariosServices } from '../../services/usuarios/usuarios.services';
+import { IUsuarios } from '../../models/usuarios.model';
+import { LibrosServices } from '../../services/libros/libros.services';
+import { ILibros } from '../../models/libros.model';
+
+@Component({
+  selector: 'app-dashboard',
+  imports: [],
+  templateUrl: './dashboard.html'
+})
+export class Dashboard {
+  usuarios:IUsuarios[] = [];
+  libros:ILibros[] = [];
+
+  constructor(private auth: AuthService, private srv_usuarios: UsuariosServices, private srv_libros:LibrosServices){
+    this.Usuarios();
+    this.Libros();
+  }
+
+  Usuarios(){
+    this.srv_usuarios.getUsuarios().subscribe(
+      (data : IUsuarios[])=>{
+        this.usuarios = data;
+      }
+    );
+  }
+
+  Libros(){
+    this.srv_libros.getLibros().subscribe(
+      (data : ILibros[])=>{
+        this.libros = data;
+      }
+    );
+  }
+  
+
+
+}

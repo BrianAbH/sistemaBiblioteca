@@ -2,7 +2,6 @@
   <div class="row h-100">
     <div class="col-lg-6 d-none d-lg-block p-0">
       <img src="fondo-login.webp" class="mw-100 h-100 object-fit-cover" alt="imagen de biblioteca">
-      
     </div>
 
     <div class="col-lg-6 col-12 col-md-12 d-flex justify-content-center align-items-center p-0">
@@ -10,18 +9,28 @@
         <p class="fw-bold"> <button class="btn btn-success"><i class="bi bi-book"></i></button>  Biblioteca Pública</p>
         <p class="font-monospace">Acceso bibliotecario</p>
         <p class="fs-1 fw-bold lead">Iniciar sesión</p>
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Correo</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="name@example.com">
-          </div>
+          <form [formGroup]="formLogin" (ngSubmit)="onSubmit()">
+              <div class="mb-3">
+                <label for="correo" class="form-label">Correo</label>
+                <input type="email" class="form-control" id="correo" placeholder="name@example.com" autocomplete="email" formControlName="Correo">
+                <span class="errors">
+                    @if(this.formLogin.get('Correo')?.dirty || this.formLogin.get('Correo')?.touched){
+                      @if(this.formLogin.get('Correo')?.errors?.['required']){
+                        Porfavor, Digite un Correo
+                      }
+                    } 
+                </span>
+              </div>
 
-          <div class="mb-3">
-            <label for="exampleFormControlInput1" class="form-label">Contraseña</label>
-            <input type="email" class="form-control" id="exampleFormControlInput1" placeholder="************">
-          </div>
+            <div class="mb-3">
+              <label for="password" class="form-label">Contraseña</label>
+              <input type="password" class="form-control" id="password" autocomplete="current-password" placeholder="************" formControlName="Password">
+            </div>
 
-        <a type="button" class="btn btn-outline-success w-100" routerLink="/menu-vista" routerLinkActive="active" >Entrar al sistema</a>
-        <p class="muted mt-5 text-body-secondary">Acceso restringido. Solo personal autorizado.</p>
+            <button type="submit" class="btn btn-outline-success w-100 mb-3" >Entrar al sistema</button>
+          </form>
+        <span class="text-danger">{{error}}</span>
+        <p class="muted mt-3 text-body-secondary">Acceso restringido. Solo personal autorizado.</p>
 
       </div>
     </div>

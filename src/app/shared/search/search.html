@@ -1,4 +1,7 @@
-<div class="input-group mb-3">
-  <span class="input-group-text bg-transparent" id="basic-addon1"><i class="bi bi-search"></i></span>
-  <input type="text" class="form-control bg-transparent" placeholder="Username">
-</div>
+ <!-- Barra de búsqueda -->
+  <form class="mb-2" (submit)="prevent($event)">
+    <div class="input-group">
+      <span class="input-group-text"><i class="bi bi-search"></i></span>
+      <input type="text" class="form-control" [placeholder]="place" (input)="onSearch($event.target.value)"/>
+    </div>
+  </form>
