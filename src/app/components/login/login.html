@@ -22,9 +22,22 @@
                 </span>
               </div>
 
-            <div class="mb-3">
+            <div class="mb-3 ">
               <label for="password" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="password" autocomplete="current-password" placeholder="************" formControlName="Password">
+              <div class="position-relative">
+                <input type="password" class="form-control" id="password" autocomplete="current-password" placeholder="************" formControlName="Password"             >
+                <button type="button" class="btn btn-outline-secondary position-absolute top-50 end-0 translate-middle-y" (click)="showPassword()">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              
+              <span class="errors">
+                    @if(this.formLogin.get('Password')?.dirty || this.formLogin.get('Password')?.touched){
+                      @if(this.formLogin.get('Password')?.errors?.['required']){
+                        Porfavor, Digite una Contraseña
+                      }
+                    } 
+                </span>
             </div>
 
             <button type="submit" class="btn btn-outline-success w-100 mb-3" >Entrar al sistema</button>
