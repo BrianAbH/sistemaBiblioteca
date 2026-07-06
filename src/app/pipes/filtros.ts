@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ICategorias } from '../models/categorias.model';
 import { ILibros } from '../models/libros.model';
 import { IUsuarios } from '../models/usuarios.model';
+import { IPrestamo } from '../models/prestamos.model';
 
 
 
@@ -46,7 +47,6 @@ export class filtroLibro implements PipeTransform {
 @Pipe({
   name: 'filtrarCategorias'
 })
-
 export class filtroCategorias implements PipeTransform {
   transform(lista: any[],filtro: string, categorias:ICategorias[]): any[] {
     if (!filtro) return lista;
@@ -59,3 +59,23 @@ export class filtroCategorias implements PipeTransform {
   }
 }
 
+
+@Pipe({
+  name: 'filtrarPrestamos'
+})
+export class filtroPrestamos implements PipeTransform {
+  transform(lista: any[], filtro: string, prestamos: IPrestamo[], usuarios:IUsuarios[], libro:ILibros[]): any[] {
+    if (!filtro) return lista;
+
+    filtro = filtro.toLowerCase();
+
+    return prestamos.filter(item => {
+    const cl = usuarios.find(c => c.id_usuario == item.id_usuario)?.nombre?.toLowerCase() ?? "";
+    const pr = libro.find(c => c.id_libro == item.id_libro)?.titulo?.toLowerCase() ?? "";
+      return (
+        cl.includes(filtro)||
+        pr.includes(filtro)
+      );
+    });
+  }
+}

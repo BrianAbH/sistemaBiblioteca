@@ -90,8 +90,6 @@ export class Usuarios {
       let usuario:IUsuarios = {...datos, id_usuario:this.isEditing}
       this.srv_usuarios.updateUsuario(usuario).subscribe(
         ()=>{
-          this.msjToast = "Usuario actualizado";
-          alert("usuario actualizada");
           this.modalRef.hide();
           this.cargarUsuarios();
           this.mostrarToast(usuario.nombre, "Actualizado Correctamente");
@@ -120,7 +118,7 @@ export class Usuarios {
         }
        
       );
-      alert("No se puede eliminar el registro porque está siendo utilizado actualmente.");
+      this.mostrarToast(nombre, "No se puede eliminar el registro porque está siendo utilizado actualmente.");
     }
 
   }

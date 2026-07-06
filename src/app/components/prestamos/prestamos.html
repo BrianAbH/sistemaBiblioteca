@@ -7,9 +7,10 @@
                 <p class="font-monospace">Registra préstamos, controla devoluciones y consulta el historial.</p>
 
                 <div class="col-lg-5 col-sm-12">
-                    <app-search>
-
-                    </app-search>
+                    <app-search
+                        (searchChange)="filtrar($event)"
+                        place="Prestamo por usuario o libro">
+                    ></app-search>
                 </div>
             </div>
 
@@ -18,7 +19,7 @@
             </div>
         </div>
 
-        <div class="table-responsive h-75 mt-3" style="border-style: dashed; border-color: #dee2e6;">
+        <div class="table-responsive h-75 mt-1" style="border-style: dashed; border-color: #dee2e6;">
             <table class="table table-striped table-hover">
                 <thead class="table-light">
                     <tr>
@@ -32,7 +33,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @for (p of prestamos; track $index) {
+                    @for (p of prestamosPagina |filtrarPrestamos:filtro:prestamos:usuarios:libros; track $index) {
                         <tr>
                             <td>{{p.id_prestamo}}</td>
                             <td>{{nombreUsuario(p.id_usuario)}}</td>
@@ -56,6 +57,32 @@
                 </tbody>
             </table>
         </div>
+
+        <!--Paginación-->
+        @if (totalPages > 1) {
+            <nav>
+                <ul class="pagination mt-1">
+                    <!-- Anterior -->
+                    <li class="page-item" [class.disabled]="page === 1">
+                    <button class="page-link" (click)="cambiarPagina(page - 1)">Anterior</button>
+                    </li>
+
+                    <!-- Números -->
+                    @for (i of [].constructor(totalPages); let idx = $index; track idx) {
+                    <li class="page-item" [class.active]="page === idx + 1">
+                        <button class="page-link" (click)="cambiarPagina(idx + 1)">
+                        {{ idx + 1 }}
+                        </button>
+                    </li>
+                    }
+
+                    <!-- Siguiente -->
+                    <li class="page-item" [class.disabled]="page === totalPages">
+                    <button class="page-link" (click)="cambiarPagina(page + 1)">Siguiente</button>
+                    </li>
+                </ul>
+            </nav>
+        }
     </div>
 </div> 
 
@@ -161,6 +188,21 @@
       <div class="modal-footer">
         <button class="btn btn-primary" (click)="guardar()"> Guardar</button>
       </div>
+    </div>
+  </div>
+</div>
+
+<!--Toast-->
+<div class="toast-container position-fixed bottom-0 end-0 p-3">
+  <div id="liveToast" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <i class="bi bi-check2-square rounded me-2"></i>
+      <strong class="me-auto">Usuario</strong>
+      <small>1 sec ago</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      {{msjToast}}
     </div>
   </div>
 </div>
