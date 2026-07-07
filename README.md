@@ -1,59 +1,78 @@
-# Biblioteca
+﻿# Sistema de Biblioteca
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.5.
+Aplicación web de gestión de biblioteca desarrollada con Angular 20.3.5.
+Esta aplicación permite administrar usuarios, libros, categorías y préstamos desde un panel protegido.
 
-## Development server
+## Características
 
-To start a local development server, run:
+- Autenticación básica y rutas protegidas con `AuthGuard`
+- Gestión completa de usuarios: alta, edición, eliminación y búsqueda
+- Gestión de libros: alta, edición, eliminación, categorías y paginación
+- Gestión de préstamos: registro, edición, eliminación y listado con paginación
+- Formularios reactivos con validaciones integradas
+- Interfaz con Bootstrap para modales y notificaciones tipo toast
 
-```bash
-ng serve
-```
+## Estructura principal
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- `src/app/components/login` - pantalla de inicio de sesión
+- `src/app/components/menu` - estructura de menú principal
+- `src/app/components/dashboard` - panel principal
+- `src/app/components/usuarios` - administración de usuarios
+- `src/app/components/libros` - administración de libros y categorías
+- `src/app/components/prestamos` - administración de préstamos
+- `src/app/services` - servicios para consumir APIs
+- `src/app/guards/auth.guard.ts` - protección de rutas autenticadas
+- `src/app/app.routes.ts` - configuración de rutas de la aplicación
 
-## Code scaffolding
+## Rutas principales
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+- `/login` - iniciar sesión
+- `/menu-vista/dashboard-vista` - dashboard principal
+- `/menu-vista/usuarios-vista` - módulo de usuarios
+- `/menu-vista/libros-vista` - módulo de libros y categorías
+- `/menu-vista/prestamos-vista` - módulo de préstamos
 
-```bash
-ng generate component component-name
-```
+## Requisitos
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+- Node.js 20 o superior
+- Angular CLI 20.x
+- npm 10+ recomendado
 
-```bash
-ng generate --help
-```
+## Instalación
 
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
+Desde la raíz del proyecto:
 
 ```bash
-ng e2e
+npm install
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Ejecución local
 
-## Additional Resources
+```bash
+npm start
+```
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Luego abre `http://localhost:4200/` en tu navegador.
+
+## Comandos útiles
+
+- `npm run build` - compila el proyecto para producción
+- `npm run watch` - compila en modo observación
+- `npm test` - ejecuta pruebas unitarias
+
+## Notas
+
+- Este proyecto utiliza Angular 20 y Bootstrap para la interfaz.
+- Asegúrate de tener el backend o servicios de API necesarios en ejecución si la app depende de ellos.
+- Si necesitas generar componentes o servicios adicionales, usa el CLI de Angular.
+
+## Credenciales de acceso
+
+- Correo: `ba749491@gmail.com`
+- Contraseña: `bibliotecarioPrincipal`
+
+## Recursos
+
+- [Angular CLI](https://angular.io/cli)
+- [Angular Forms](https://angular.io/guide/forms)
+- [Bootstrap](https://getbootstrap.com/)
