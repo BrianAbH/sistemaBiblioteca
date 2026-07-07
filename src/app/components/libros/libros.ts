@@ -16,31 +16,36 @@ declare const bootstrap: any;
 })
 export class Libros {
 
-  //Variables para la paginacion
+  // Página actual del listado de libros
   page = 1;
+  // Cantidad de libros mostrados por página
   pageSize = 12;
-  //Variables para la paginacion Categorias
+  // Página actual del listado de categorías
   pageC = 1;
+  // Cantidad de categorías mostradas por página
   pageSizeC = 2;
 
-  // Listas principales
+  // Listado de libros cargados desde el servicio
   libros: ILibros[] = [];
+  // Listado de categorías cargadas desde el servicio
   categorias: ICategorias[] = [];
 
-  // Almacena el ID del registro que se está editando
+  // ID del libro o categoría que se está editando; null indica creación
   isEditing: number | null = null;
 
-  // Formularios reactivos
+  // Formularios reactivos para libro y categoría
   formLibro: FormGroup;
   formCategoria: FormGroup;
 
-  // Referencias de los modales Bootstrap
+  // Referencias a los modales de Bootstrap
   modalRefL: any;
   modalRefC: any;
   modalRefcs: any;
 
-  msjToast:string = '';
+  // Mensaje mostrado en el toast de notificación
+  msjToast: string = '';
 
+  // Texto del filtro para búsqueda de libros o categorías
   filtro: string = '';
   filtrar(texto: string) {
     this.filtro = texto;
@@ -233,22 +238,26 @@ export class Libros {
     this.page = n;
   }
 
-  mostrarToast(nombre: string, mensaje:string){
+  // Muestra un toast con el título y mensaje especificados
+  mostrarToast(nombre: string, mensaje: string) {
     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
     this.msjToast = `${nombre} ${mensaje}`;
     toast.show();
   }
 
 
-  //Metodos para lograr la paginacion Categorias
+  // Métodos para la paginación de categorías
   get totalPagesC(): number {
     return Math.ceil(this.categorias.length / this.pageSizeC);
   }
+
+  // Categorías mostradas en la página actual
   get categoriaPagina(): ICategorias[] {
     const start = (this.pageC - 1) * this.pageSizeC;
     return this.categorias.slice(start, start + this.pageSizeC);
   }
 
+  // Cambia la página actual de categorías si el número es válido
   cambiarPaginaC(n: number) {
     if (n < 1 || n > this.totalPagesC) return;
     this.pageC = n;

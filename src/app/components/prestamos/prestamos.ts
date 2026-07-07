@@ -17,28 +17,40 @@ declare const bootstrap:any;
   templateUrl: './prestamos.html',
 })
 export class Prestamos {
+  // Fecha actual que puede usarse en validaciones o filtros de préstamos
   fechaActual = new Date();
-  //Variables para la paginacion
+  // Página actual del listado de préstamos
   page = 1;
+  // Cantidad de registros mostrados por página
   pageSize = 12;
 
-  msjToast:string = '';
+  // Mensaje mostrado en el toast de notificación
+  msjToast: string = '';
 
-  estados:string[]=["En Préstamo","Devuelto","Vencido"];
-  isEditing:number|null = null;
+  // Estados disponibles para un préstamo
+  estados: string[] = ["En Préstamo", "Devuelto", "Vencido"];
+  // ID del préstamo que se está editando; null indica nuevo registro
+  isEditing: number | null = null;
   
-  formPrestamo:FormGroup;
-  usuarios:IUsuarios[]=[];
-  libros:ILibros[]=[];
-  prestamos:IPrestamo[]=[];
+  // Formulario reactivo para crear o editar préstamos
+  formPrestamo: FormGroup;
+  // Usuarios disponibles para seleccionar en el préstamo
+  usuarios: IUsuarios[] = [];
+  // Libros disponibles para seleccionar en el préstamo
+  libros: ILibros[] = [];
+  // Préstamos cargados desde el servicio
+  prestamos: IPrestamo[] = [];
   
-  modalR:any;
+  // Referencia al modal de Bootstrap para préstamos
+  modalR: any;
 
+  // Texto del filtro principal para usuarios y préstamos
   filtro: string = '';
   filtrar(texto: string) {
     this.filtro = texto;
   }
 
+  // Texto del filtro secundario para libros
   filtroL: string = '';
   filtrarL(texto: string) {
     this.filtroL = texto;
@@ -59,16 +71,20 @@ export class Prestamos {
   }
 
   @ViewChild('modalPrestamoRef') modalElement !: ElementRef;
-  ngAfterViewInit(){
+
+  // Inicializa el modal de Bootstrap cuando la vista está lista
+  ngAfterViewInit() {
     this.modalR = new bootstrap.Modal(this.modalElement.nativeElement);
   }
 
-  abrirModal(){
+  // Abre el modal para crear un nuevo préstamo
+  abrirModal() {
     this.isEditing = null;
     this.modalR.show();
   }
 
-  editar(prestamo:IPrestamo){
+  // Abre el modal para editar un préstamo existente
+  editar(prestamo: IPrestamo) {
     this.isEditing = prestamo.id_prestamo;
     this.formPrestamo.patchValue({
       ...prestamo
@@ -76,55 +92,55 @@ export class Prestamos {
     this.modalR.show();
   }
 
-  obtenerUsuarios(){
+  // Carga la lista de usuarios desde el servicio
+  obtenerUsuarios() {
     this.srv_usuarios.getUsuarios().subscribe(
-      (data : IUsuarios[])=>{
+      (data: IUsuarios[]) => {
         this.usuarios = data;
       }
     );
   }
 
-  obtenerLibros(){
+  // Carga la lista de libros desde el servicio
+  obtenerLibros() {
     this.srv_libros.getLibros().subscribe(
-      (data : ILibros[])=>{
+      (data: ILibros[]) => {
         this.libros = data;
       }
     );
   }
 
-  obtenerPrestamos(){
+  // Carga la lista de préstamos desde el servicio
+  obtenerPrestamos() {
     this.srv_prestamo.getPrestamos().subscribe(
-      (data : IPrestamo[])=>{
+      (data: IPrestamo[]) => {
         this.prestamos = data;
       }
     );
   }
 
-  guardar(){
-    if(this.formPrestamo.invalid){
+  // Guarda un nuevo préstamo o actualiza uno existente
+  guardar() {
+    if (this.formPrestamo.invalid) {
       this.formPrestamo.markAllAsTouched();
       console.log(this.formPrestamo.value);
       return;
     }
-    
     const datos = this.formPrestamo.value;
-
-    if(this.isEditing){
-      let prestamo = {...datos, id_prestamo:this.isEditing}
-
+    if (this.isEditing) {
+      let prestamo = { ...datos, id_prestamo: this.isEditing };
       this.srv_prestamo.putPrestamo(prestamo).subscribe(
-        ()=>{
+        () => {
           this.obtenerPrestamos();
           this.modalR.hide();
           this.mostrarToast("Prestamo", "Actualizado Correctamente");
         }
       );
 
-
-    }else{
-      let prestamos = {...datos};
+    } else {
+      let prestamos = { ...datos };
       this.srv_prestamo.postPrestamo(prestamos).subscribe(
-        ()=>{
+        () => {
           this.obtenerPrestamos();
           this.modalR.hide();
           this.mostrarToast("Prestamo", "Guardado Correctamente");
@@ -134,11 +150,12 @@ export class Prestamos {
 
   }
   
-  eliminar(id:number){
+  // Elimina un préstamo por su ID
+  eliminar(id: number) {
     let isDelete = confirm("Estas seguro que quiere eliminar este prestamo");
-    if(isDelete){
+    if (isDelete) {
       this.srv_prestamo.deletePrestamo(id).subscribe(
-        ()=>{
+        () => {
           this.obtenerPrestamos();
           this.mostrarToast("Prestamo", "Eliminado Correctamente");
         }
@@ -146,7 +163,8 @@ export class Prestamos {
     }
   }
 
-  nombreUsuario(id:number){
+  // Busca y devuelve el nombre del usuario asociado al préstamo
+  nombreUsuario(id: number) {
     const user_Id = this.usuarios.find(
       (u) => Number(u.id_usuario) === Number(id)
     );
@@ -154,7 +172,8 @@ export class Prestamos {
     return user_Id?.nombre || 'Sin Nombre';
   }
 
-  nombreLibro(id:number){
+  // Busca y devuelve el título del libro asociado al préstamo
+  nombreLibro(id: number) {
     const libro_Id = this.libros.find(
       (u) => Number(u.id_libro) === Number(id)
     );
@@ -162,29 +181,27 @@ export class Prestamos {
     return libro_Id?.titulo || 'Sin Titulo';
   }
 
-  mostrarToast(nombre: string, mensaje:string){
+  // Muestra un toast con el nombre y mensaje indicados
+  mostrarToast(nombre: string, mensaje: string) {
     const toast = new bootstrap.Toast(document.getElementById('liveToast'));
     this.msjToast = `${nombre} ${mensaje}`;
     toast.show();
   }
 
-  //Metodos para lograr la paginacion Categorias
-    get totalPages(): number {
-      return Math.ceil(this.prestamos.length / this.pageSize);
-    }
-    get prestamosPagina(): IPrestamo[] {
-      const start = (this.page - 1) * this.pageSize;
-      return this.prestamos.slice(start, start + this.pageSize);
-    }
-  
-    cambiarPagina(n: number) {
-      if (n < 1 || n > this.totalPages) return;
-      this.page = n;
-    }
+  // Métodos para la paginación de préstamos
+  get totalPages(): number {
+    return Math.ceil(this.prestamos.length / this.pageSize);
+  }
 
+  get prestamosPagina(): IPrestamo[] {
+    const start = (this.page - 1) * this.pageSize;
+    return this.prestamos.slice(start, start + this.pageSize);
+  }
 
-
-
-
+  // Cambia la página actual si el número es válido
+  cambiarPagina(n: number) {
+    if (n < 1 || n > this.totalPages) return;
+    this.page = n;
+  }
 
 }

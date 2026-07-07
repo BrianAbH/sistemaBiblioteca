@@ -14,7 +14,4 @@ export class Menu {
   constructor(public auth: AuthService){
     this.correo = this.auth.getUserCorreo();
   }
-
-  
-
 }
