@@ -16,6 +16,10 @@ export class PrestamoServices {
     return this.http.get<IPrestamo[]>(this.urlApi);
   }
 
+  getPrestamosActivos():Observable<IPrestamo[]>{
+    return this.http.get<IPrestamo[]>(`${this.urlApi}/activos`);
+  }
+
   postPrestamo(prestamo:IPrestamo):Observable<IPrestamo>{
     return this.http.post<IPrestamo>(this.urlApi,prestamo);
   }

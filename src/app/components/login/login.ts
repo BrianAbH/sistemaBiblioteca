@@ -32,8 +32,9 @@ export class Login {
       this.auth.login(Correo, Password).subscribe({
         next: res => {
           this.auth.saveToken(res.token);
-          alert('Inicio Exitoso');
+          alert('Inicio de sesión exitoso');
           this.router.navigate(['/menu-vista']);
+          
         },
         error: () => {
           this.error = 'Credenciales inválidas';
@@ -41,6 +42,7 @@ export class Login {
       });
     }
   }
+
 
   showPassword(): void {
     const passwordInput = document.getElementById('password') as HTMLInputElement;  

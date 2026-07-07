@@ -4,6 +4,7 @@ import { UsuariosServices } from '../../services/usuarios/usuarios.services';
 import { IUsuarios } from '../../models/usuarios.model';
 import { LibrosServices } from '../../services/libros/libros.services';
 import { ILibros } from '../../models/libros.model';
+import { PrestamoServices } from '../../services/prestamos/prestamo.services';
 
 @Component({
   selector: 'app-dashboard',
@@ -13,10 +14,12 @@ import { ILibros } from '../../models/libros.model';
 export class Dashboard {
   usuarios:IUsuarios[] = [];
   libros:ILibros[] = [];
+  prestamos:any[] = [];
 
-  constructor(private auth: AuthService, private srv_usuarios: UsuariosServices, private srv_libros:LibrosServices){
+  constructor(private auth: AuthService, private srv_usuarios: UsuariosServices, private srv_libros:LibrosServices, private srv_prestamos:PrestamoServices) {
     this.Usuarios();
     this.Libros();
+    this.Prestamos();
   }
 
   Usuarios(){
@@ -31,6 +34,14 @@ export class Dashboard {
     this.srv_libros.getLibros().subscribe(
       (data : ILibros[])=>{
         this.libros = data;
+      }
+    );
+  }
+
+  Prestamos(){
+    this.srv_prestamos.getPrestamosActivos().subscribe(
+      (data : any[])=>{
+        this.prestamos = data;
       }
     );
   }
