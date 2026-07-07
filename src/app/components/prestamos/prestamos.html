@@ -93,7 +93,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h1 class="modal-title fs-5" >
-            {{isEditing ? "Actualizar datos del usuario" : "Nuevo Usuario"}}
+            {{isEditing ? "Actualizar datos del préstamo" : "Nuevo Préstamo"}}
         </h1>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -114,7 +114,7 @@
                 <span class="errors">
                     @if (this.formPrestamo.get('id_usuario')?.invalid && this.formPrestamo.get('id_usuario')?.dirty || this.formPrestamo.get('id_usuario')?.touched) {
                         @if(this.formPrestamo.get('id_usuario')?.errors?.['required']){
-                            Seleccione un usuario para el prestamo porfavor
+                            Seleccione un usuario para el prestamo Por favor
                         }
                     }
                 </span>
@@ -136,7 +136,7 @@
                 <span class="errors">
                     @if (this.formPrestamo.get('id_libro')?.invalid && this.formPrestamo.get('id_libro')?.dirty || this.formPrestamo.get('id_libro')?.touched) {
                         @if(this.formPrestamo.get('id_libro')?.errors?.['required']){
-                            Seleccione un libro para el prestamo porfavor
+                            Seleccione un libro para el prestamo Por favor
                         }
                     }
                 </span>
@@ -197,7 +197,7 @@
   <div id="liveToast" class="toast text-bg-primary" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
       <i class="bi bi-check2-square rounded me-2"></i>
-      <strong class="me-auto">Usuario</strong>
+      <strong class="me-auto">Prestamo</strong>
       <small>1 sec ago</small>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
