@@ -121,34 +121,43 @@ export class Prestamos {
 
   // Guarda un nuevo préstamo o actualiza uno existente
   guardar() {
-    if (this.formPrestamo.invalid) {
-      this.formPrestamo.markAllAsTouched();
-      console.log(this.formPrestamo.value);
-      return;
-    }
-    const datos = this.formPrestamo.value;
-    if (this.isEditing) {
-      let prestamo = { ...datos, id_prestamo: this.isEditing };
-      this.srv_prestamo.putPrestamo(prestamo).subscribe(
-        () => {
-          this.obtenerPrestamos();
-          this.modalR.hide();
-          this.mostrarToast("Prestamo", "Actualizado Correctamente");
-        }
-      );
-
-    } else {
-      let prestamos = { ...datos };
-      this.srv_prestamo.postPrestamo(prestamos).subscribe(
-        () => {
-          this.obtenerPrestamos();
-          this.modalR.hide();
-          this.mostrarToast("Prestamo", "Guardado Correctamente");
-        }
-      );
-    }
-
+  if (this.formPrestamo.invalid) {
+    this.formPrestamo.markAllAsTouched();
+    console.log(this.formPrestamo.value);
+    return;
   }
+  
+  const datos = this.formPrestamo.value;
+
+  if (this.isEditing) {
+    let prestamo = { ...datos, id_prestamo: this.isEditing };
+    this.srv_prestamo.putPrestamo(prestamo).subscribe({
+      next: () => {
+        this.obtenerPrestamos();
+        this.modalR.hide();
+        this.mostrarToast("Prestamo", "Actualizado Correctamente");
+      },
+      error: (err) => {
+        const mensaje = err.error || "Error al actualizar el préstamo";
+        this.mostrarToast("Error", mensaje); 
+      }
+    });
+
+  } else {
+    let prestamos = { ...datos };
+    this.srv_prestamo.postPrestamo(prestamos).subscribe({
+      next: () => {
+        this.obtenerPrestamos();
+        this.modalR.hide();
+        this.mostrarToast("Prestamo", "Guardado Correctamente");
+      },
+      error: (err) => {
+        const mensaje = err.error || "Error al guardar el préstamo";
+        this.mostrarToast("Error", mensaje);
+      }
+    });
+  }
+}
   
   // Elimina un préstamo por su ID
   eliminar(id: number) {

@@ -34,7 +34,6 @@ export class Login {
           this.auth.saveToken(res.token);
           alert('Inicio de sesión exitoso');
           this.router.navigate(['/menu-vista']);
-          
         },
         error: () => {
           this.error = 'Credenciales inválidas';
